@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,8 +19,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.filter.GenericFilterBean;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
                 .authorizeRequests()
-                    .mvcMatchers("/hello")
+                    .mvcMatchers("/hello","/all")
+                        .permitAll()
+                    .mvcMatchers(HttpMethod.POST,"/add","/del")
                         .permitAll()
                     .anyRequest()
                         .authenticated()
@@ -57,14 +62,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .csrf()
                         .disable()
-                    //.addFilterBefore()
+                    .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement()
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-        authenticationManagerBuilder
+        authenticationManagerBuilder.eraseCredentials(true)
                 .userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
@@ -86,6 +91,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
     */
+
+
+    GenericFilterBean tokenFilter() {
+        return new SimpleTokenFilter(userRepository, secretKey);
+    }
 
     AccessDeniedHandler accessDeniedHandler(){
         return new SimpleAccessDeniedHandler();

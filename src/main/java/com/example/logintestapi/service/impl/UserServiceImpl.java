@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     }
     public void addUser(String name, String password, String email){
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hash = passwordEncoder.encode(password);
         User user = User.of(name,hash,email);
         userRepository.save(user);

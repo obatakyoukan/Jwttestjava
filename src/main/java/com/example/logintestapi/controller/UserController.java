@@ -17,23 +17,28 @@ public class UserController {
         return "hello";
     }
 
+    @GetMapping("/test")
+    public String test(){
+        return "test";
+    }
+
     @GetMapping("/all")
     public List<User> allList()
     {
         return userService.searchAll();
     }
 
-    @GetMapping("/add")
-    public List<User> addUser(@RequestParam("userId") String userId, @RequestParam("password") String password, @RequestParam("name") String name)
+    @PostMapping("/add")
+    public List<User> addUser(@RequestParam("name") String name, @RequestParam("password") String password, @RequestParam("email") String email)
     {
-        userService.addUser(userId,password,name);
+        userService.addUser(name,password,email);
         return userService.searchAll();
     }
 
-    @GetMapping("/del")
-    public List<User> delUser(@RequestParam("userId") String userId)
+    @PostMapping("/del")
+    public List<User> delUser(@RequestParam("email") String email)
     {
-        userService.deleteUser(userId);
+        userService.deleteUser(email);
         return userService.searchAll();
     }
 

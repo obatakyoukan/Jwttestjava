@@ -22,6 +22,8 @@ public class SimpleUserDetailsService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .map(SimpleLoginUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
     }
+
 
 }
