@@ -2,12 +2,10 @@ package com.example.logintestapi.repository;
 
 import com.example.logintestapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-import java.util.List;
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 
-@Repository
-public interface UserRepository extends JpaRepository<User,Long>
-{
-    List<User> findByUserId(String user_id);
+    Optional<User> findFirstByName(String name);
 }
