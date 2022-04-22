@@ -18,6 +18,7 @@ public class SimpleUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) {
+        //System.out.println("loadUserByUsername");
         // emailでデータベースからユーザーエンティティを検索する
         return userRepository.findByEmail(email)
                 .map(SimpleLoginUser::new)

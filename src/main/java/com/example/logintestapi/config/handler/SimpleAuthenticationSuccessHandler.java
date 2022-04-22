@@ -49,6 +49,10 @@ public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccess
                 .withNotBefore(notBefore)
                 .withExpiresAt(expiresAt)
                 .withSubject(loginUser.getUser().getId().toString())
+                // add info
+                .withClaim("X-NAME", loginUser.getUser().getName())
+                .withClaim("X-EMAIL", loginUser.getUser().getEmail() )
+                //
                 .sign(this.algorithm);
         log.debug("generate token : {}", token);
         return token;

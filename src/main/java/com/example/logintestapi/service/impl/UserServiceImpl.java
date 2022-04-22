@@ -28,6 +28,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findFirstByName(name);
     }
 
+    public Optional<User> findByEmail(String email){
+        Objects.requireNonNull(email, "email must be not null");
+        return userRepository.findByEmail(email);
+    }
+
     public List<User> searchAll(){
         return userRepository.findAll();
     }
@@ -35,6 +40,14 @@ public class UserServiceImpl implements UserService {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hash = passwordEncoder.encode(password);
+        /*
+        if(passwordEncoder.matches("pass", hash))
+        {
+            System.out.println("you pass");
+        }
+        System.out.println(password);
+        System.out.println(hash);
+        */
         User user = User.of(name,hash,email);
         userRepository.save(user);
     }

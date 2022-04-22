@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
         authenticationManagerBuilder.eraseCredentials(true)
-                .userDetailsService(userDetailsService())
+                .userDetailsService(simpleUserDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -84,6 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 
     /*
     public BCryptPasswordEncoder passwordEncoder(){
